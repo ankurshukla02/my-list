@@ -69,6 +69,6 @@ jobs:
           REMOTE=${VPS_USER}@${VPS_HOST}
           TARGET_DIR=${REMOTE_PATH:-/var/www/ott-my-list-service}
           sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no -p "$PORT" "$REMOTE" \
-            "mkdir -p $TARGET_DIR && rm -rf $TARGET_DIR/* && tar -xzf /tmp/release.tar.gz -C $TARGET_DIR && cd $TARGET_DIR && npm ci && npm run build && npm run db:migrate && npm run db:seed && npm ci --production && (command -v pm2 >/dev/null 2>&1 || npm i -g pm2) && pm2 restart ott-my-list-service || pm2 start dist/server.js --name ott-my-list-service" 
+            "mkdir -p $TARGET_DIR && rm -rf $TARGET_DIR/* && tar -xzf /tmp/release.tar.gz -C $TARGET_DIR && cd $TARGET_DIR && (command -v node >/dev/null 2>&1 || (curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt-get install -y nodejs)) && npm ci && npm run build && npm run db:migrate && npm run db:seed && npm ci --production && (command -v pm2 >/dev/null 2>&1 || npm i -g pm2) && pm2 restart ott-my-list-service || pm2 start dist/server.js --name ott-my-list-service" 
 
 
