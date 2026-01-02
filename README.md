@@ -7,7 +7,6 @@ A Node.js/TypeScript API service for managing user watchlists in an OTT (Over-Th
 - **User Management**: Basic user authentication with mock user IDs
 - **Content Management**: Support for Movies and TV Shows with detailed metadata
 - **My List Management**: Add, view, and remove items from personal watchlists
-- **Soft Delete**: Data preservation through soft delete functionality
 - **Database Integration**: MySQL database with Sequelize ORM
 - **RESTful API**: Clean REST endpoints with proper HTTP status codes
 - **Input Validation**: Joi schema validation for all API inputs
@@ -149,7 +148,7 @@ All endpoints require an `x-user-id` header with a mock user ID.
 ```
 GET    /my-list          # Get user's list items with pagination
 POST   /my-list          # Add item to list
-DELETE /my-list          # Remove item from list (soft delete)
+DELETE /my-list          # Remove item from list
 ```
 
 #### Soft Delete Behavior
