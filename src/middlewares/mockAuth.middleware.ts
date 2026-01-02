@@ -8,10 +8,12 @@ export function mockAuth(
   const userId = req.header('x-user-id');
 
   if (!userId) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).json({
+      success: false,
+      message: 'Authentication required. Please provide x-user-id header.'
+    });
   }
 
-  // attach to request
   (req as any).user = { id: userId };
   next();
 }

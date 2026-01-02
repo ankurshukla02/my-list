@@ -6,6 +6,12 @@ export class MyList extends Model {
   public user_id!: string;
   public content_id!: string;
   public content_type!: number; // 1 for movie, 2 for tv_show
+  public readonly created_at!: Date;
+  public readonly updated_at!: Date;
+
+  // Association mixins
+  public readonly movie?: any;
+  public readonly tvShow?: any;
 }
 
 MyList.init(
@@ -32,5 +38,8 @@ MyList.init(
     sequelize,
     modelName: 'my_list',
     tableName: 'my_list',
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
   }
 );

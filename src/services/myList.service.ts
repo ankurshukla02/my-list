@@ -4,6 +4,27 @@ import { TVShow } from '../models/tvShow.model';
 import { CONTENT_TYPE, ContentType } from '../constants/contentType';
 import { ConflictError, NotFoundError } from '../errors/domainError';
 
+export interface PaginatedResult<T> {
+  items: T[];
+  total: number;
+}
+
+export interface MyListItemWithContent {
+  id: number;
+  contentId: string;
+  contentType: ContentType;
+  addedAt: Date;
+  content: {
+    id: string;
+    title: string;
+    description: string;
+    genres: string[];
+    releaseDate?: string;
+    director?: string;
+    actors?: string[];
+  };
+}
+
 export class MyListService {
   /**
    * Add item to user's My List
@@ -48,21 +69,34 @@ export class MyListService {
     if (deletedCount === 0) {
       throw new NotFoundError('Item not found in My List');
     }
-
-    return true;
   }
 
   /**
-   * List user's My List items
+   * List user's My List items with content details
    */
   static async listItems(
     userId: string,
     page = 1,
     limit = 20
-  ) {
+  ): Promise<PaginatedResult<MyListItemWithContent>> {
     const offset = (page - 1) * limit;
 
-    return MyListRepository.listItems(userId, limit, offset);
+    const result = await MyListRepository.listItemsWithContent(
+      userId,
+      limit,
+      offset
+    );
+
+    return {
+      items: result.items.map(item => ({
+        id: item.id,
+        contentId: item.content_id,
+        contentType: item.content_type as ContentType,
+        addedAt: item.created_at,
+        content: this.formatContent(item.content, item.content_type as ContentType),
+      })),
+      total: result.total,
+    };
   }
 
   /**
@@ -84,6 +118,44 @@ export class MyListService {
 
     if (!exists) {
       throw new NotFoundError('Content not found');
+    }
+  }
+
+  /**
+   * Format content data consistently
+   */
+  private static formatContent(content: any, contentType: ContentType) {
+    const parseJson = (value: any) => {
+      if (typeof value === 'string') {
+        try {
+          return JSON.parse(value);
+        } catch {
+          return [];
+        }
+      }
+      return value || [];
+    };
+
+    if (contentType === CONTENT_TYPE.MOVIE) {
+      return {
+        id: content.id,
+        title: content.title,
+        description: content.description,
+        genres: parseJson(content.genres),
+        releaseDate: content.release_date,
+        director: content.director,
+        actors: parseJson(content.actors),
+      };
+    } else {
+      const episodes = parseJson(content.episodes);
+      return {
+        id: content.id,
+        title: content.title,
+        description: content.description,
+        genres: parseJson(content.genres),
+        releaseDate: episodes?.[0]?.releaseDate,
+        actors: episodes?.[0]?.actors || [],
+      };
     }
   }
 }
