@@ -3,7 +3,7 @@ import { app } from '../src/app';
 import { CONTENT_TYPE } from '../src/constants/contentType';
 
 describe('My List Integration Tests', () => {
-  const userId = 'user-1';
+  const userId = 'user_001';
 
   it('should add item to my list', async () => {
     const res = await request(app)

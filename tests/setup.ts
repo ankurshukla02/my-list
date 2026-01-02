@@ -1,4 +1,5 @@
 import { sequelize } from '../src/config/sequelize';
+import '../src/models'; // Import all models to register them
 
 // Force test environment for database config
 process.env.NODE_ENV = 'test';
