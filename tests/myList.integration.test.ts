@@ -10,12 +10,12 @@ describe('My List Integration Tests', () => {
       .post('/my-list')
       .set('x-user-id', userId)
       .send({
-        contentId: 'movie-4',
+        contentId: 'movie_004',
         contentType: CONTENT_TYPE.MOVIE,
       });
 
     expect(res.status).toBe(201);
-    expect(res.body.contentId).toBe('movie-4');
+    expect(res.body.contentId).toBe('movie_004');
   });
 
   it('should prevent duplicate item', async () => {
@@ -23,7 +23,7 @@ describe('My List Integration Tests', () => {
       .post('/my-list')
       .set('x-user-id', userId)
       .send({
-        contentId: 'movie-4',
+        contentId: 'movie_004',
         contentType: CONTENT_TYPE.MOVIE,
       });
 
@@ -45,7 +45,7 @@ describe('My List Integration Tests', () => {
       .delete('/my-list')
       .set('x-user-id', userId)
       .send({
-        contentId: 'movie-4',
+        contentId: 'movie_004',
         contentType: CONTENT_TYPE.MOVIE,
       });
 
