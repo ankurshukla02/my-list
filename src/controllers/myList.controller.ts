@@ -6,6 +6,7 @@ import {
   listItemsSchema,
 } from '../validations/myList.validation';
 import { DomainError } from '../errors/domainError';
+import { ContentType } from '../constants/contentType';
 
 export class MyListController {
   static async addItem(req: Request, res: Response) {
@@ -33,7 +34,8 @@ export class MyListController {
         data: {
           id: item.id,
           contentId: item.content_id,
-          contentType: item.content_type,
+          contentType: MyListService.contentTypeToString(item.content_type as ContentType),
+          addedAt: item.created_at,
         },
       };
 

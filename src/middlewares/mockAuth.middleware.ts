@@ -14,6 +14,15 @@ export function mockAuth(
     });
   }
 
+  // Validate userId format (basic validation)
+  if (!/^user_\d+$/.test(userId)) {
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid user ID format. Expected: user_XXX'
+    });
+  }
+
+  // Attach user to request
   (req as any).user = { id: userId };
   next();
 }

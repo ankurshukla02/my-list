@@ -12,13 +12,13 @@ describe('My List Integration Tests', () => {
         .set('x-user-id', userId)
         .send({
           contentId: 'movie_004',
-          contentType: CONTENT_TYPE.MOVIE,
+          contentType: 'movie',
         });
 
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
       expect(res.body.data.contentId).toBe('movie_004');
-      expect(res.body.data.contentType).toBe(CONTENT_TYPE.MOVIE);
+      expect(res.body.data.contentType).toBe('movie');
       expect(res.body.data.addedAt).toBeDefined();
     });
 
@@ -28,7 +28,7 @@ describe('My List Integration Tests', () => {
         .set('x-user-id', userId)
         .send({
           contentId: 'movie_004',
-          contentType: CONTENT_TYPE.MOVIE,
+          contentType: 'movie',
         });
 
       expect(res.status).toBe(409);
@@ -42,7 +42,7 @@ describe('My List Integration Tests', () => {
         .set('x-user-id', userId)
         .send({
           contentId: 'invalid_id',
-          contentType: CONTENT_TYPE.MOVIE,
+          contentType: 'movie',
         });
 
       expect(res.status).toBe(400);
@@ -55,7 +55,7 @@ describe('My List Integration Tests', () => {
         .set('x-user-id', userId)
         .send({
           contentId: 'movie_999',
-          contentType: CONTENT_TYPE.MOVIE,
+          contentType: 'movie',
         });
 
       expect(res.status).toBe(404);
@@ -104,7 +104,7 @@ describe('My List Integration Tests', () => {
         .set('x-user-id', userId)
         .send({
           contentId: 'movie_004',
-          contentType: CONTENT_TYPE.MOVIE,
+          contentType: 'movie',
         });
 
       expect(res.status).toBe(200);
@@ -118,7 +118,7 @@ describe('My List Integration Tests', () => {
         .set('x-user-id', userId)
         .send({
           contentId: 'movie_999',
-          contentType: CONTENT_TYPE.MOVIE,
+          contentType: 'movie',
         });
 
       expect(res.status).toBe(404);

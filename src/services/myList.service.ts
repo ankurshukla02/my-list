@@ -2,7 +2,7 @@ import { MyListRepository } from '../repositories/myList.repository';
 import { Movie } from '../models/movie.model';
 import { TVShow } from '../models/tvShow.model';
 import { CONTENT_TYPE, ContentType } from '../constants/contentType';
-import { ConflictError, NotFoundError } from '../errors/domainError';
+import { ConflictError, NotFoundError, ValidationError } from '../errors/domainError';
 
 export interface PaginatedResult<T> {
   items: T[];
@@ -12,7 +12,7 @@ export interface PaginatedResult<T> {
 export interface MyListItemWithContent {
   id: number;
   contentId: string;
-  contentType: ContentType;
+  contentType: string; // Changed to string for API responses
   addedAt: Date;
   content: {
     id: string;
@@ -27,13 +27,43 @@ export interface MyListItemWithContent {
 
 export class MyListService {
   /**
+   * Convert string contentType to integer
+   */
+  private static stringToContentType(contentType: string): ContentType {
+    switch (contentType) {
+      case 'movie':
+        return CONTENT_TYPE.MOVIE;
+      case 'tvshow':
+        return CONTENT_TYPE.TV_SHOW;
+      default:
+        throw new ValidationError('Invalid content type');
+    }
+  }
+
+  /**
+   * Convert integer contentType to string (public for controller use)
+   */
+  static contentTypeToString(contentType: ContentType): string {
+    switch (contentType) {
+      case CONTENT_TYPE.MOVIE:
+        return 'movie';
+      case CONTENT_TYPE.TV_SHOW:
+        return 'tvshow';
+      default:
+        throw new Error('Unknown content type');
+    }
+  }
+
+  /**
    * Add item to user's My List
    */
   static async addItem(
     userId: string,
     contentId: string,
-    contentType: ContentType
+    contentTypeString: string
   ) {
+    const contentType = this.stringToContentType(contentTypeString);
+
     // 1️⃣ Check content existence
     await this.ensureContentExists(contentId, contentType);
 
@@ -58,8 +88,10 @@ export class MyListService {
   static async removeItem(
     userId: string,
     contentId: string,
-    contentType: ContentType
+    contentTypeString: string
   ) {
+    const contentType = this.stringToContentType(contentTypeString);
+
     const deletedCount = await MyListRepository.removeItem(
       userId,
       contentId,
@@ -91,7 +123,7 @@ export class MyListService {
       items: result.items.map(item => ({
         id: item.id,
         contentId: item.content_id,
-        contentType: item.content_type as ContentType,
+        contentType: this.contentTypeToString(item.content_type as ContentType), // Convert to string
         addedAt: item.created_at,
         content: this.formatContent(item.content, item.content_type as ContentType),
       })),

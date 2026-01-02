@@ -6,9 +6,10 @@ export const addItemSchema = Joi.object({
     .messages({
       'string.pattern.base': 'contentId must be in format movie_XXX or tv_XXX'
     }),
-  contentType: Joi.number()
-    .valid(CONTENT_TYPE.MOVIE, CONTENT_TYPE.TV_SHOW)
-    .required(),
+  contentType: Joi.string().valid('movie', 'tvshow').required()
+    .messages({
+      'any.only': 'contentType must be either "movie" or "tvshow"'
+    }),
 });
 
 export const removeItemSchema = Joi.object({
@@ -16,9 +17,10 @@ export const removeItemSchema = Joi.object({
     .messages({
       'string.pattern.base': 'contentId must be in format movie_XXX or tv_XXX'
     }),
-  contentType: Joi.number()
-    .valid(CONTENT_TYPE.MOVIE, CONTENT_TYPE.TV_SHOW)
-    .required(),
+  contentType: Joi.string().valid('movie', 'tvshow').required()
+    .messages({
+      'any.only': 'contentType must be either "movie" or "tvshow"'
+    }),
 });
 
 export const listItemsSchema = Joi.object({
