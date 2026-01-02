@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('tv_shows', [
+    const tvShows = [
       {
         id: 'tv_001',
         title: 'Breaking Bad',
@@ -95,7 +95,17 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
-    ]);
+    ];
+
+    for (const tvShow of tvShows) {
+      const existingTvShow = await queryInterface.rawSelect('tv_shows', {
+        where: { id: tvShow.id },
+      }, ['id']);
+
+      if (!existingTvShow) {
+        await queryInterface.bulkInsert('tv_shows', [tvShow]);
+      }
+    }
   },
 
   async down(queryInterface, Sequelize) {

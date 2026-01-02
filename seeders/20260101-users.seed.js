@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('users', [
+    const users = [
       {
         id: 'user_001',
         username: 'john_doe',
@@ -53,7 +53,17 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
-    ]);
+    ];
+
+    for (const user of users) {
+      const existingUser = await queryInterface.rawSelect('users', {
+        where: { id: user.id },
+      }, ['id']);
+
+      if (!existingUser) {
+        await queryInterface.bulkInsert('users', [user]);
+      }
+    }
   },
 
   async down(queryInterface, Sequelize) {

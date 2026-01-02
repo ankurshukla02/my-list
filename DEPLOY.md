@@ -17,14 +17,21 @@ CI/CD — Deploy to your VPS
 - Installs dependencies with `npm ci`
 - Runs `npm run build` (TypeScript compile)
 - Runs tests via `npx jest`
-- If the `main` pipeline succeeds, it archives the repository, copies it to your VPS via `scp`, and runs remote commands to install dependencies, build, run database migrations (`npm run db:migrate`), run seeders (`npm run db:seed`), and restart the app with `pm2`.
+- If the `main` pipeline succeeds, it archives the repository, copies it to your VPS via `scp`, and runs remote commands to install dependencies, build, and restart the app with `pm2`.
 
-4) Security notes
+4) Manual steps on VPS after deployment
+
+- Set up your `.env` file in the deployment directory with database credentials
+- Run database migrations: `npm run db:migrate`
+- Run seeders (safe to run multiple times): `npm run db:seed`
+- The app will be running via PM2 and restart automatically on future deployments
+
+5) Security notes
 
 - Storing SSH passwords as GitHub secrets works, but using an SSH key (`VPS_SSH_KEY`) is more secure. If you prefer keys, add `VPS_SSH_KEY` as a secret and update the workflow to use it (I can do that for you).
 - The workflow disables strict host key checking for convenience; you may want to pre-populate known_hosts on the runner for stricter security.
 
-5) Example: create secrets from the command line (locally)
+6) Example: create secrets from the command line (locally)
 
 ```bash
 GITHUB_REPO=your-org/your-repo

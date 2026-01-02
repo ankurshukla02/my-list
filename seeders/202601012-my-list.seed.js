@@ -4,7 +4,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
 
-    await queryInterface.bulkInsert('my_list', [
+    const myListItems = [
       {
         user_id: 'user_001',
         content_id: 'movie_001',
@@ -40,7 +40,21 @@ module.exports = {
         created_at: now,
         updated_at: now,
       },
-    ]);
+    ];
+
+    for (const item of myListItems) {
+      const existingItem = await queryInterface.rawSelect('my_list', {
+        where: {
+          user_id: item.user_id,
+          content_id: item.content_id,
+          content_type: item.content_type,
+        },
+      }, ['user_id']);
+
+      if (!existingItem) {
+        await queryInterface.bulkInsert('my_list', [item]);
+      }
+    }
   },
 
   async down(queryInterface, Sequelize) {

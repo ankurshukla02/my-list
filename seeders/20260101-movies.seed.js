@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('movies', [
+    const movies = [
       {
         id: 'movie_001',
         title: 'Inception',
@@ -58,7 +58,17 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
-    ]);
+    ];
+
+    for (const movie of movies) {
+      const existingMovie = await queryInterface.rawSelect('movies', {
+        where: { id: movie.id },
+      }, ['id']);
+
+      if (!existingMovie) {
+        await queryInterface.bulkInsert('movies', [movie]);
+      }
+    }
   },
 
   async down(queryInterface, Sequelize) {
