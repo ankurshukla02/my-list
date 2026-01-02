@@ -7,6 +7,7 @@ A Node.js/TypeScript API service for managing user watchlists in an OTT (Over-Th
 - **User Management**: Basic user authentication with mock user IDs
 - **Content Management**: Support for Movies and TV Shows with detailed metadata
 - **My List Management**: Add, view, and remove items from personal watchlists
+- **Soft Delete**: Data preservation through soft delete functionality
 - **Database Integration**: MySQL database with Sequelize ORM
 - **RESTful API**: Clean REST endpoints with proper HTTP status codes
 - **Input Validation**: Joi schema validation for all API inputs
@@ -143,25 +144,34 @@ npm start
 
 ### My List Management
 
-All endpoints require an `Authorization` header with a mock user ID.
+All endpoints require an `x-user-id` header with a mock user ID.
 
 ```
-GET    /api/my-list          # Get user's list items
-POST   /api/my-list          # Add item to list
-DELETE /api/my-list/:id      # Remove item from list
+GET    /my-list          # Get user's list items with pagination
+POST   /my-list          # Add item to list
+DELETE /my-list          # Remove item from list (soft delete)
 ```
+
+#### Soft Delete Behavior
+
+The service implements **soft deletes** for data preservation. When an item is "removed" from a user's list:
+
+- The item is marked as deleted with a `deleted_at` timestamp
+- It no longer appears in list queries
+- The data is preserved for potential future restoration or analytics
+- Duplicate prevention still works (can't add the same item twice, even if previously soft deleted)
 
 ### Request/Response Examples
 
 **Add to My List:**
 ```bash
-POST /api/my-list
-Authorization: Bearer user_001
+POST /my-list
+x-user-id: user_001
 Content-Type: application/json
 
 {
   "contentId": "movie_001",
-  "contentType": 1
+  "contentType": "movie"
 }
 ```
 
@@ -171,11 +181,37 @@ Content-Type: application/json
   "success": true,
   "data": {
     "id": 1,
-    "userId": "user_001",
     "contentId": "movie_001",
-    "contentType": 1,
-    "createdAt": "2026-01-03T10:00:00.000Z"
+    "contentType": "movie",
+    "addedAt": "2026-01-03T10:00:00.000Z",
+    "content": {
+      "id": "movie_001",
+      "title": "Sample Movie",
+      "description": "A great movie",
+      "genres": ["Action", "Drama"],
+      "releaseDate": "2023-01-01"
+    }
   }
+}
+```
+
+**Remove from My List:**
+```bash
+DELETE /my-list
+x-user-id: user_001
+Content-Type: application/json
+
+{
+  "contentId": "movie_001",
+  "contentType": "movie"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Item removed from My List"
 }
 ```
 
