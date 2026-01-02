@@ -38,7 +38,7 @@ gh secret set VPS_REMOTE_PATH -b"/var/www/ott-my-list-service" --repo "$GITHUB_R
 
 6) On the VPS
 
-- Ensure Node.js is installed (v18+) and `pm2` is available (the workflow will install `pm2` if needed).
+- Ensure Node.js is installed (v20+) and `pm2` is available (the workflow will install `pm2` if needed).
 - Ensure the `VPS_USER` has permissions to write to `VPS_REMOTE_PATH` (or use `root`).
 - Ensure your `.env` file is present in the deployment directory (the workflow does not copy it; you need to set it up manually or via another method).
 
