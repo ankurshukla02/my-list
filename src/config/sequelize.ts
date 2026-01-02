@@ -1,18 +1,20 @@
 import { Sequelize } from 'sequelize';
 import { database } from '../config/env';
 
+const isTest = process.env.NODE_ENV === 'test';
+
 export const sequelize = new Sequelize(
-  database.name as string,
-  database.user as string,
-  database.password,
+  isTest ? ':memory:' : (database.name as string),
+  isTest ? '' : (database.user as string),
+  isTest ? '' : database.password,
   {
-    host: database.host,
-    port: Number(database.port),
-    dialect: 'mysql',
+    host: isTest ? '' : database.host,
+    port: isTest ? 0 : Number(database.port),
+    dialect: isTest ? 'sqlite' : 'mysql',
 
     logging: false, // ❗ disable SQL logs in prod
 
-    pool: {
+    pool: isTest ? undefined : {
       max: Number(database.poolMax) || 10,
       min: Number(database.poolMin) || 0,
       acquire: Number(database.poolAcquire) || 5000,
