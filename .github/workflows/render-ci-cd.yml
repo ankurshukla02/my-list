@@ -49,7 +49,7 @@ jobs:
 
       - name: Create release archive
         run: |
-          tar --exclude=.git --exclude=node_modules -czf release.tar.gz .
+          tar --ignore-failed-read --exclude=.git --exclude=node_modules -czf release.tar.gz .
 
       - name: Install sshpass
         run: sudo apt-get update && sudo apt-get install -y sshpass
