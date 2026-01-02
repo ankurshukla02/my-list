@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const myList_controller_1 = require("../controllers/myList.controller");
+const mockAuth_middleware_1 = require("../middlewares/mockAuth.middleware");
+const router = (0, express_1.Router)();
+router.use(mockAuth_middleware_1.mockAuth);
+router.post('/', myList_controller_1.MyListController.addItem);
+router.delete('/', myList_controller_1.MyListController.removeItem);
+router.get('/', myList_controller_1.MyListController.listItems);
+exports.default = router;

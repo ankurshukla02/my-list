@@ -21,7 +21,15 @@ CI/CD — Deploy to your VPS
 
 4) Manual steps on VPS after deployment
 
-- Set up your `.env` file in the deployment directory with database credentials
+- Create a `.env` file in the deployment directory with database credentials:
+  ```bash
+  DB_USERNAME=your_db_username
+  DB_PASSWORD=your_db_password
+  DB_DATABASE=your_database_name
+  DB_HOST=your_db_host
+  DB_DIALECT=mysql
+  NODE_ENV=production
+  ```
 - Run database migrations: `npm run db:migrate`
 - Run seeders (safe to run multiple times): `npm run db:seed`
 - The app will be running via PM2 and restart automatically on future deployments

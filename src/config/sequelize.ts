@@ -10,7 +10,7 @@ export const sequelize = new Sequelize(
   {
     host: isTest ? '' : database.host,
     port: isTest ? 0 : Number(database.port),
-    dialect: isTest ? 'sqlite' : 'mysql',
+    dialect: isTest ? 'sqlite' : database.dialect as any,
 
     logging: false, // ❗ disable SQL logs in prod
 
