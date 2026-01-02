@@ -1,4 +1,12 @@
 {
+  "scripts": {
+    "dev": "ts-node-dev src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+
+    "db:migrate": "sequelize db:migrate",
+    "db:migrate:undo": "sequelize db:migrate:undo"
+  },
   "compilerOptions": {
     "target": "ES2020",
     "module": "CommonJS",
