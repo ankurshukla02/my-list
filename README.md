@@ -151,14 +151,12 @@ POST   /my-list          # Add item to list
 DELETE /my-list          # Remove item from list
 ```
 
-#### Soft Delete Behavior
+#### Delete Behavior
 
-The service implements **soft deletes** for data preservation. When an item is "removed" from a user's list:
+The service implements **deletes**. When an item is "removed" from a user's list:
 
-- The item is marked as deleted with a `deleted_at` timestamp
+- The item is permanent as deleted
 - It no longer appears in list queries
-- The data is preserved for potential future restoration or analytics
-- Duplicate prevention still works (can't add the same item twice, even if previously soft deleted)
 
 ### Request/Response Examples
 
